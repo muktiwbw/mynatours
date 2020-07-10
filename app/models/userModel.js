@@ -1,5 +1,6 @@
 const db = require('./../utils/db');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const schema = new db.Schema({
   name: {
@@ -29,16 +30,37 @@ const schema = new db.Schema({
   password: {
     type: String,
     required: [true, 'Missing password field'],
-    minlength: [8, 'Password length must be at least 8 characters']
+    minlength: [8, 'Password length must be at least 8 characters'],
+    select: false
   },
   passwordConfirm: {
     type: String,
     required: [true, 'Missing password confirm field'],
     validate: {
-      validator: val => val === this.password,
+      validator: function(val) { return val === this.password },
       message: 'Passwords don\'t match'
-    }
+    },
+    select: false
+  },
+  role: {
+    type: String,
+    default: 'user'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  },
+  passwordUpdatedAt: {
+    type: Date,
+    default: Date.now()
   }
+})
+
+schema.pre('save', async function(next) {
+  this.password = await bcrypt.hash(this.password, 10);
+  this.passwordConfirm = undefined;
+
+  next();
 })
 
 module.exports = db.model('User', schema, 'users');

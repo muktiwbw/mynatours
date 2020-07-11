@@ -3,6 +3,7 @@ const { AppError } = require('./../utils/error');
 const { catchAsync } = require('./../utils/query');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const mailer = require('./../utils/mailer');
 
 exports.register = catchAsync(async (req, res, next) => {
   const { 
@@ -68,5 +69,40 @@ exports.login = catchAsync(async (req, res, next) => {
           data: {
             token
           }
+        });
+});
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  // * 1. Check if email is provided
+  if (!req.filteredBody.email) return next(new AppError('Missing email field', 400));
+
+  // * 2. Check if user exists
+  const { email } = req.filteredBody;
+  const user = await User.findOne({email});
+
+  if (!user) return next(new AppError('User with that email does\'t exist', 400));
+
+  // * 3. Sign a token
+  const { _id } = user;
+  const token = await promisify(jwt.sign)(
+    { _id }, 
+    process.env.APP_SECRET, 
+    { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN }
+  );
+
+  // * 4. Send email
+  await mailer.send({
+    from: process.env.MAIL_ADDRESS,
+    to: email,
+    subject: 'Reset Password',
+    text: `To reset your password, please send a PATCH request to /auth/resetPassword/${token}`
+  });
+
+  // * 5. Return
+  return res
+        .status(200)
+        .json({
+          status: 'success',
+          message: 'Reset token has been sent to your email'
         });
 });

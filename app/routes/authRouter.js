@@ -20,4 +20,10 @@ router.route('/login')
 	  AuthController.login
 	);
 
+router.route('/forgotPassword')
+	.post(
+	  Request.filterBody([ 'email' ]),
+	  AuthController.forgotPassword
+	);
+
 module.exports = router;

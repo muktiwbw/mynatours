@@ -52,7 +52,8 @@ const schema = new db.Schema({
   },
   passwordUpdatedAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
+    select: false
   }
 })
 

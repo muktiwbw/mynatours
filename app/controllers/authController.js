@@ -78,15 +78,15 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // * 2. Check if user exists
   const { email } = req.filteredBody;
-  const user = await User.findOne({email});
+  const user = await User.findOne({ email }).select('+passwordUpdatedAt');
 
   if (!user) return next(new AppError('User with that email does\'t exist', 400));
 
   // * 2.5 Return the user if they do this twice in 24 hours
-  const lastPasswordUpdate = new Date(user.passwordUpdatedAt).getTime() + (24 * 3600 * 1000);
+  const nextPasswordUpdate = new Date(user.passwordUpdatedAt).getTime() + (24 * 3600 * 1000);
   const now = new Date(Date.now()).getTime()
 
-  if (now <= lastPasswordUpdate) return next(new AppError('You can only reset password once every 24 hours', 400))
+  if (now <= nextPasswordUpdate) return next(new AppError('You can only reset password once every 24 hours', 400))
   
 
   // * 3. Sign a token
@@ -125,17 +125,17 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const { _id } = await promisify(jwt.verify)(req.params.token, process.env.APP_SECRET);
 
   // * 3. Check if user exists
-  const user = await User.findById(_id);
+  const user = await User.findById(_id).select('+passwordUpdatedAt');
 
   if (!user) {
     return next(new AppError('The user you\'re trying to update currently doesn\'t exist', 404));
   }
   
   // * 3.5 Return the user if they do this twice in 24 hours
-  const lastPasswordUpdate = new Date(user.passwordUpdatedAt).getTime() + (24 * 3600 * 1000);
+  const nextPasswordUpdate = new Date(user.passwordUpdatedAt).getTime() + (24 * 3600 * 1000);
   const now = new Date(Date.now()).getTime()
 
-  if (now <= lastPasswordUpdate) {
+  if (now <= nextPasswordUpdate) {
     return next(new AppError('You can only reset password once every 24 hours', 400))
   }
 

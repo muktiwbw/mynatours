@@ -63,4 +63,8 @@ schema.pre('save', async function(next) {
   next();
 })
 
+schema.methods.passwordMatches = (string, hash) => {
+  return bcrypt.compare(string, hash);
+};
+
 module.exports = db.model('User', schema, 'users');

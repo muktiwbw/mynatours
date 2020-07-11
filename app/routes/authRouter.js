@@ -14,4 +14,10 @@ router.route('/register')
 	  AuthController.register
 	);
 
+router.route('/login')
+	.post(
+	  Request.filterBody([ 'email', 'password' ]),
+	  AuthController.login
+	);
+
 module.exports = router;

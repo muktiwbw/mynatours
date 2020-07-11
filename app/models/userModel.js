@@ -57,11 +57,14 @@ const schema = new db.Schema({
 })
 
 schema.pre('save', async function(next) {
-  this.password = await bcrypt.hash(this.password, 10);
-  this.passwordConfirm = undefined;
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+    this.passwordConfirm = undefined;
+    this.passwordUpdatedAt = Date.now();
+  }
 
   next();
-})
+});
 
 schema.methods.passwordMatches = (string, hash) => {
   return bcrypt.compare(string, hash);

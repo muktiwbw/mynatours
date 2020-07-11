@@ -82,12 +82,19 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   if (!user) return next(new AppError('User with that email does\'t exist', 400));
 
+  // * 2.5 Return the user if they do this twice in 24 hours
+  const lastPasswordUpdate = new Date(user.passwordUpdatedAt).getTime() + (24 * 3600 * 1000);
+  const now = new Date(Date.now()).getTime()
+
+  if (now <= lastPasswordUpdate) return next(new AppError('You can only reset password once every 24 hours', 400))
+  
+
   // * 3. Sign a token
   const { _id } = user;
   const token = await promisify(jwt.sign)(
     { _id }, 
     process.env.APP_SECRET, 
-    { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN }
+    { expiresIn: process.env.JWT_RESET_PASSWORD_EXPIRES_IN }
   );
 
   // * 4. Send email
@@ -104,5 +111,55 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
         .json({
           status: 'success',
           message: 'Reset token has been sent to your email'
+        });
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // * 1. If token params and new password and passwordConfirm is provided
+  if (!req.params.token) return next(new AppError('Missing reset token', 400));
+  if (!req.filteredBody.password || !req.filteredBody.passwordConfirm) {
+    return next(new AppError('Missing password or password confirm', 400));
+  }
+
+  // * 2. Verify token => get the payload which is the user ID
+  const { _id } = await promisify(jwt.verify)(req.params.token, process.env.APP_SECRET);
+
+  // * 3. Check if user exists
+  const user = await User.findById(_id);
+
+  if (!user) {
+    return next(new AppError('The user you\'re trying to update currently doesn\'t exist', 404));
+  }
+  
+  // * 3.5 Return the user if they do this twice in 24 hours
+  const lastPasswordUpdate = new Date(user.passwordUpdatedAt).getTime() + (24 * 3600 * 1000);
+  const now = new Date(Date.now()).getTime()
+
+  if (now <= lastPasswordUpdate) {
+    return next(new AppError('You can only reset password once every 24 hours', 400))
+  }
+
+  // * 4. Update password => update lastPassswordUpdate as well
+  const { password, passwordConfirm } = req.filteredBody;
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+
+  // * 5. Access token
+  const token = await promisify(jwt.sign)(
+    { _id },
+    process.env.APP_SECRET,
+    { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN }
+  );
+
+  // * 6. Return
+  return res
+        .status(201)
+        .json({
+          status: 'updated',
+          data: {
+            message: 'Your password has already been updated',
+            token
+          }
         });
 });

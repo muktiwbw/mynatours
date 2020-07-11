@@ -46,6 +46,10 @@ const schema = new db.Schema({
     type: String,
     default: 'user'
   },
+  active: {
+    type: Boolean,
+    default: true
+  },
   createdAt: {
     type: Date,
     default: Date.now()
@@ -63,6 +67,12 @@ schema.pre('save', async function(next) {
     this.passwordConfirm = undefined;
     this.passwordUpdatedAt = Date.now();
   }
+
+  next();
+});
+
+schema.pre(/^find/, function(next) {
+  this.find({ active: true });
 
   next();
 });

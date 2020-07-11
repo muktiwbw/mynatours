@@ -29,7 +29,7 @@ exports.authenticate = async (req, res, next) => {
 
   // * 5. Inject user object to req
   const { name, username, role } = user;
-  req.user = { name, username, role };
+  req.user = { _id, name, username, role };
 
   // * 6. Next
   next();

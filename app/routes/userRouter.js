@@ -12,4 +12,24 @@ router.route('/')
         UserController.getUsers
       );
 
+router.route('/updateMe')
+      .patch(
+        AuthMiddleware.allowedTo('user'),
+        Request.filterBody('name', 'username', 'email'),
+        UserController.updateMe
+      );
+      
+router.route('/updatePassword')
+      .patch(
+        AuthMiddleware.allowedTo('user'),
+        Request.filterBody('currPassword', 'newPassword', 'newPasswordConfirm'),
+        UserController.updatePassword
+      );
+
+router.route('/deleteMe')
+      .delete(
+        AuthMiddleware.allowedTo('user'),
+        UserController.deleteMe
+      );
+
 module.exports = router;

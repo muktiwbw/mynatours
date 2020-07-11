@@ -8,7 +8,8 @@ const getMongoDBConnectionString = () => {
 mongoose.connect(getMongoDBConnectionString(), { 
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useFindAndModify: false
 }).then(() => {
   console.log('Connection to database is established...');
 }).catch((error) => {

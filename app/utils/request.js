@@ -1,4 +1,4 @@
-exports.filterBody = (allowed) => {
+exports.filterBody = (...allowed) => {
   return (req, res, next) => {
     const filtered = {};
   

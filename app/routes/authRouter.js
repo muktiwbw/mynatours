@@ -7,28 +7,29 @@ const router = express.Router();
 
 router.route('/register')
   	.post(
-	  Request.filterBody([
+	  Request.filterBody(
 		  'name', 'username', 
 		  'email', 'password', 
-		  'passwordConfirm']),
+		  'passwordConfirm'
+		),
 	  AuthController.register
 	);
 
 router.route('/login')
 	.post(
-	  Request.filterBody([ 'email', 'password' ]),
+	  Request.filterBody('email', 'password'),
 	  AuthController.login
 	);
 
 router.route('/forgotPassword')
 	.post(
-	  Request.filterBody([ 'email' ]),
+	  Request.filterBody('email'),
 	  AuthController.forgotPassword
 	);
 
 router.route('/resetPassword/:token')
 	.patch(
-	  Request.filterBody([ 'password', 'passwordConfirm' ]),
+	  Request.filterBody('password', 'passwordConfirm'),
 	  AuthController.resetPassword
 	);
 

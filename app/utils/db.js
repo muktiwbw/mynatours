@@ -9,10 +9,10 @@ mongoose.connect(getMongoDBConnectionString(), {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
-}).catch(() => {
-  console.log('Error connecting to database!');
+}).then(() => {
+  console.log('Connection to database is established...');
+}).catch((error) => {
+  console.log('Error connecting to database!', error);
 });
-
-console.log('Connection to database is established...');
 
 module.exports = mongoose;

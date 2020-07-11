@@ -11,7 +11,7 @@ exports.filterBody = (allowed) => {
     req.filteredBody = filtered;
   
     next();
-  }
+  };
 };
 
 exports.querySeparator = (req, res, next) => {

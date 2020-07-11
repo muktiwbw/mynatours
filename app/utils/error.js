@@ -10,7 +10,7 @@ class AppError extends Error {
 
 exports.AppError = AppError;
 
-exports.globalHandler = (err, req, res, next) => {
+exports.globalErrorHandler = (err, req, res, next) => {
   return res
           .json({
             message: err.message,

@@ -8,8 +8,8 @@ const seed = catchAsync(async () => {
   const usersSeed = JSON.parse(await promisify(fs.readFile)(`${__dirname}/../seeds/users.json`, { encoding: 'utf-8' }));
   const toursSeed = JSON.parse(await promisify(fs.readFile)(`${__dirname}/../seeds/tours.json`, { encoding: 'utf-8' }));
 
-  const users = await User.insertMany(usersSeed);
-  const tours = await Tour.insertMany(toursSeed);
+  const users = await User.create(usersSeed);
+  const tours = await Tour.create(toursSeed);
 
   Promise.all([ users, tours ]).then(() => {
     console.log('Database seeding is completed');

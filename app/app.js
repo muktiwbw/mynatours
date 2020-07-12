@@ -1,6 +1,7 @@
 const express = require('express');
 const AuthRouter = require('./routes/authRouter');
 const UserRouter = require('./routes/userRouter');
+const TourRouter = require('./routes/tourRouter');
 const { globalErrorHandler } = require('./utils/error');
 const AuthMiddleware = require('./middlewares/authMiddleware');
 
@@ -15,6 +16,7 @@ app.use(`${routePrefix}/auth`, AuthRouter);
 // * Below this middleware are routes that needs authentication
 app.use(AuthMiddleware.authenticate);
 
+app.use(`${routePrefix}/tours`, TourRouter);
 app.use(`${routePrefix}/users`, UserRouter);
 
 // * Global error handler

@@ -2,6 +2,7 @@ const express = require('express');
 const AuthRouter = require('./routes/authRouter');
 const UserRouter = require('./routes/userRouter');
 const TourRouter = require('./routes/tourRouter');
+const ReviewRouter = require('./routes/reviewRouter');
 const { globalErrorHandler } = require('./utils/error');
 const AuthMiddleware = require('./middlewares/authMiddleware');
 
@@ -18,6 +19,7 @@ app.use(AuthMiddleware.authenticate);
 
 app.use(`${routePrefix}/tours`, TourRouter);
 app.use(`${routePrefix}/users`, UserRouter);
+app.use(`${routePrefix}/reviews`, ReviewRouter);
 
 // * Global error handler
 app.use(globalErrorHandler);

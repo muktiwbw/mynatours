@@ -8,7 +8,7 @@ const router = express.Router();
 router.route('/register')
   	.post(
 	  Request.filterBody(
-		  'name', 'username', 
+		  'name', 'photo', 
 		  'email', 'password', 
 		  'passwordConfirm'
 		),

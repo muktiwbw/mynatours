@@ -9,7 +9,7 @@ exports.getUsers = catchAsync(async (req, res, next) => {
 
   const users = await new QueryBuilder(User)
                       .filter()
-                      .select('name username email role createdAt')
+                      .select('name photo email role createdAt')
                       .paginate(extraQuery)
                       .get();
 
@@ -32,13 +32,13 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(_id, req.filteredBody, { new: true, runValidators: true });
 
   // * 3. Return
-  const { name, username, email } = user;
+  const { name, photo, email } = user;
   return res
         .status(201)
         .json({
           status: 'updated',
           data: {
-            user: { name, username, email }
+            user: { name, photo, email }
           }
         });
 });
@@ -51,13 +51,13 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(_id, { active: false }, { new: true });
 
   // * 3. Return
-  const { name, username, email } = user;
+  const { name, photo, email } = user;
   return res
         .status(204)
         .json({
           status: 'deleted',
           data: {
-            user: { name, username, email }
+            user: { name, photo, email }
           }
         });
 });

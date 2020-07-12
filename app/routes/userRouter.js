@@ -15,7 +15,7 @@ router.route('/')
 router.route('/updateMe')
       .patch(
         AuthMiddleware.allowedTo('user'),
-        Request.filterBody('name', 'username', 'email'),
+        Request.filterBody('name', 'photo', 'email'),
         UserController.updateMe
       );
       

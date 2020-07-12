@@ -8,7 +8,7 @@ const mailer = require('./../utils/mailer');
 exports.register = catchAsync(async (req, res, next) => {
   const { 
     _id, name, 
-    username, email, 
+    photo, email, 
     role, createdAt 
   } = await User.create(req.filteredBody);
 
@@ -26,7 +26,7 @@ exports.register = catchAsync(async (req, res, next) => {
             token,
             user: {
               _id, name, 
-              username, email, 
+              photo, email, 
               role, createdAt 
             }
           }

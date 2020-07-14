@@ -115,12 +115,22 @@ const schema = new db.Schema({
     type: db.Schema.ObjectId,
     ref: 'User'
   }]
-});
+}, { 
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+ });
 
 schema.pre('save', function(next) {
   if (this.isModified('name')) this.slug = slugify(this.name, { lower: true });
 
   next();
+});
+
+schema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'tour',
+  options: { limit: 5 }
 });
 
 module.exports = db.model('Tour', schema, 'tours');

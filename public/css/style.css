@@ -71,6 +71,22 @@ body {
   margin-bottom: 3rem !important;
 }
 
+.ma-bt-sm {
+  margin-bottom: 2rem !important;
+}
+
+.ma-tp-sm {
+  margin-top: 2rem !important;
+}
+
+.ma-rt-sm {
+  margin-right: 1rem !important;
+}
+
+.ma-rt-md {
+  margin-right: 2rem !important;
+}
+
 .ma-bt-lg {
   margin-bottom: 3.5rem !important;
 }
@@ -222,6 +238,11 @@ body {
   background-color: #2e864b;
 }
 
+.btn.btn--red:focus {
+  outline: none;
+  background-color: rgb(128, 27, 47);
+}
+
 .btn--white {
   background-color: #fff;
   color: #777;
@@ -236,6 +257,14 @@ body {
 }
 .btn--green::after {
   background-color: #55c57a;
+}
+
+.btn--red {
+  background-color: crimson;
+  color: #fff;
+}
+.btn--red::after {
+  background-color: crimson;
 }
 
 .btn--small {
@@ -1077,6 +1106,14 @@ body {
   grid-gap: 7rem;
 }
 
+.card-container.column-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-container.column-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
 .card {
   border-radius: 3px;
   overflow: hidden;
@@ -1095,6 +1132,12 @@ body {
   -ms-flex-direction: column;
   flex-direction: column;
 }
+
+.card.even-shadow {
+  -webkit-box-shadow: .5rem .5rem 2.5rem rgba(0, 0, 0, 0.2) !important;
+  box-shadow: .5rem .5rem 2.5rem rgba(0, 0, 0, 0.2) !important;
+}
+
 .card__header {
   position: relative;
 }
@@ -1160,6 +1203,11 @@ body {
   height: 2rem;
   width: 2rem;
   fill: #55c57a;
+}
+.card__icon.red {
+  height: 2rem;
+  width: 2rem;
+  fill: crimson;
 }
 .card__footer {
   background-color: #f7f7f7;
@@ -1262,6 +1310,10 @@ body {
   color: #bbb;
 }
 
+textarea.form__input.tall {
+  height: 250px;
+}
+
 .form__group:not(:last-child) {
   margin-bottom: 2.5rem;
 }
@@ -1321,4 +1373,54 @@ body {
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
+}
+
+/* * Custom CSS =========================================================================*/
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #f2f2f2;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #55c57a;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #55c57a;
+  cursor: pointer;
+}
+
+#geocoder-section {
+  width: 100%;
+}
+
+#geocoder-map {
+  height: 30rem;
+  /* background: crimson; */
+}
+
+.mapboxgl-ctrl-geocoder {
+  min-width: 100% !important;
+}
+
+.hide {
+  display: none !important;
 }

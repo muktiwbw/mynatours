@@ -1,0 +1,39 @@
+extends layout
+
+block append header
+  script(src="https://unpkg.com/axios/dist/axios.min.js")
+  if jwt
+    meta(jwt=jwt)
+
+mixin navItem(href, icon, text, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=href)
+      svg
+        use(xlink:href=`/img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'settings', 'Setting', (page === 'me'))
+          if currentUser.role === 'user'
+            +navItem('#', 'briefcase', 'My bookings', false)
+            +navItem('#', 'star', 'My reviews', false)
+            +navItem('#', 'credit-card', 'Billing', false)
+        if currentUser.role === 'admin'
+          .admin-nav
+            h5.admin-nav__heading Admin
+            ul.side-nav
+              +navItem('/manage/tours', 'map', 'Manage tours', (page === 'manageTours'))
+              +navItem('#', 'users', 'Manage users', false)
+              +navItem('#', 'star', 'Manage reviews', false)
+              +navItem('#', 'briefcase', 'Manage billings', false)
+
+      block contentMe
+
+block append script
+  if jwt
+    script(src="/js/axiosConfig.js")
+  script(src="/js/flash.js")

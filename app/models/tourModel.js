@@ -1,5 +1,6 @@
 const db = require('./../utils/db');
 const slugify = require('slugify');
+const { AppError } = require('../utils/error');
 
 const schema = new db.Schema({
   name: {
@@ -122,6 +123,11 @@ const schema = new db.Schema({
 
 schema.pre('save', function(next) {
   if (this.isModified('name')) this.slug = slugify(this.name, { lower: true });
+  if (this.isModified('locations')) {
+    this.locations.forEach(loc => {
+      if (loc.day > this.duration) return next(new AppError('Day can\'t be greater than duration', '400'));
+    });
+  }
 
   next();
 });

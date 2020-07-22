@@ -1,6 +1,7 @@
 const express = require('express');
 const UserController = require('./../controllers/userController');
 const AuthMiddleware = require('./../middlewares/authMiddleware');
+const { upload } = require('./../middlewares/fileMiddleware');
 const Request = require('./../utils/request');
 
 const router = express.Router();
@@ -14,14 +15,13 @@ router.route('/')
 
 router.route('/updateMe')
       .patch(
-        AuthMiddleware.allowedTo('user'),
+        upload.single('photo'),
         Request.filterBody('name', 'photo', 'email'),
         UserController.updateMe
       );
       
 router.route('/updatePassword')
       .patch(
-        AuthMiddleware.allowedTo('user'),
         Request.filterBody('currPassword', 'newPassword', 'newPasswordConfirm'),
         UserController.updatePassword
       );

@@ -1,0 +1,112 @@
+extends layoutMe
+
+block append header
+  script(src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js')
+  link(href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css', rel='stylesheet')
+  script(src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js")
+  link(rel="stylesheet", href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css", type="text/css")
+
+block contentMe
+  .user-view__content
+    .user-view__form-container
+      h2.heading-secondary.ma-bt-md #{!tour ? 'New Tour' : `Edit - ${tour.name}`}
+      form.form
+        .form__group
+          label.form__label(for='name') Name
+          input#name.form__input(type='text', required, value=tour ? tour.name : '')
+        .form__group.ma-bt-md
+          label.form__label(for='summary') Summary
+          textarea#summary.form__input(required) #{tour ? tour.summary : ''}
+        .form__group.ma-bt-md
+          label.form__label(for='description') Description
+          textarea#description.form__input.tall(required) #{tour ? tour.description : ''}
+        .form__group.ma-bt-md
+          label.form__label(for='difficulty') Difficulty
+          select#difficulty.form__input(required)
+            for diff in [ 'easy', 'medium', 'difficult' ]
+              option(value=diff, selected=tour ? diff === tour.difficulty : false) #{diff.toUpperCase()}
+        .form__group.ma-bt-md
+          label.form__label(for='duration') Duration:
+            | 
+            span#duration-value #{tour ? tour.duration : 1}
+            |#{' days'}
+          input#duration.form__input.slider(required, type='range', min='1', max='15', value=tour ? tour.duration : 1)
+        .form__group.ma-bt-md
+          label.form__label(for='maxGroupSize') Max participants:
+            | 
+            span#maxGroupSize-value #{tour ? tour.maxGroupSize : 10}
+          input#maxGroupSize.form__input.slider(required, type='range', min='1', max='50', value=tour ? tour.maxGroupSize : 10)
+        .form__group.ma-bt-md
+          label.form__label(for='price') Price
+          input#price.form__input(required, type='number', min='1' value=tour ? tour.price : '')
+        .form__group.ma-bt-md
+          label.form__label(for='startDates') Start dates
+          .sd-container
+            if tour
+              for startDate in tour.startDates
+                input.ma-bt-md.startDates.form__input(required, type='datetime-local', value=startDate.toISOString().slice(0,19))
+            else
+              input.ma-bt-md.startDates.form__input(required, type='datetime-local')
+          .ma-bt-sm.right
+            button.sd.btn.btn--small.ma-rt-sm(action='rm', evtSrc='sd') Shrink
+            button.sd.btn.btn--small.btn--green(action='ad', evtSrc='sd') Expand
+        .form__group.ma-bt-md
+          label.form__label(for='locations') Locations
+          .loc-container
+            if tour
+              for loc, i in tour.locations
+                .loc-wrapper.card.even-shadow.ma-bt-md
+                  .card__details
+                    h1.card__sub-heading Location #{i+1}
+                    .form__group.card__text.loc-input-wrapper
+                      input.locations.description.ma-bt-sm.form__input(required, type='text', placeholder='Location name (e.g. Heroes Monument)', value=loc.description)   
+                      input.locations.coordinate.ma-bt-sm.form__input(required, type='text', placeholder='Coordinates (e.g. 115.11280313746386,-1.6926391618314938)', idx=i+1, value=loc.coordinates.join(','))   
+                      input.locations.day.ma-bt-sm.form__input(required, type='number', placeholder='What day (e.g. 2)', value=loc.day)
+            else
+              .loc-wrapper.card.even-shadow.ma-bt-md
+                .card__details
+                  h1.card__sub-heading Location 1
+                  .form__group.card__text.loc-input-wrapper
+                    input.locations.description.ma-bt-sm.form__input(required, type='text', placeholder='Location name (e.g. Heroes Monument)', value='Test')   
+                    input.locations.coordinate.ma-bt-sm.form__input(required, type='text', placeholder='Coordinates (e.g. 115.11280313746386,-1.6926391618314938)', idx='1', value='112.7378360257976,-7.246151790421763')   
+                    input.locations.day.ma-bt-sm.form__input(required, type='number', placeholder='What day (e.g. 2)', value='1')
+          .ma-bt-sm.right
+            button.loc.btn.btn--small.ma-rt-sm(action='rm', evtSrc='loc') Shrink
+            button.loc.btn.btn--small.btn--green(action='ad', evtSrc='loc') Expand
+        .form__group.ma-bt-md
+          label.form__label(for='startLocation') Start location
+          .sLoc-container
+            .sLoc-wrapper.card.even-shadow.ma-bt-md
+              .card__details
+                .form__group.card__text.sLoc-input-wrapper
+                  input.startLocation.address.form__input.ma-tp-sm.ma-bt-sm(required, type='text', placeholder='Address (e.g. 104 Pahlawan Street, Surabaya, Indonesia )', value=tour ? tour.startLocation.address : '')
+                  input.startLocation.description.ma-bt-sm.form__input(required, type='text', placeholder='City (e.g. Surabaya, Indonesia)', value=tour ? tour.startLocation.description : '')   
+                  input.startLocation.coordinate.ma-bt-sm.form__input(required, type='text', placeholder='Coordinates (e.g. 115.11280313746386,-1.6926391618314938)', value=tour ? tour.startLocation.coordinates.join(',') : '')   
+        .form__group.ma-bt-md
+          label.form__label(for='guides') Guides
+          .guide-container
+            if tour
+              for guide in tour.guides
+                .guide-wrapper.overview-box__detail.ma-bt-sm(value=guide._id)
+                  img.overview-box__img(src=`/img/users/${guide.photo}`, alt=guide.name)
+                  label.form__label.guide-list #{guide.role.toUpperCase()} - #{guide.name}
+          select#guides.form__input.ma-bt-sm(required, evtSrc='guide', action='ad')
+            option.guide-select-reset(value="reset") Add guide
+            for guide in guides
+              option.guide-select(value=guide._id, imgSrc=guide.photo, style=tour && tour.guides.map(tg => tg._id).includes(guide._id) ? 'display: none;' : '') #{guide.role.split('-').join(' ').toUpperCase()} - #{guide.name}
+          .ma-bt-sm.right
+            button.guide.btn.btn--small.ma-rt-sm(action='rm', evtSrc='guide') Shrink
+        .form__group.form__photo-upload
+          input#cover.form__upload(type='file', accept='image/*', name='cover')
+          label.form__label(for='cover') Choose cover image
+        .form__group.form__photo-upload
+          input#slides.form__upload(type='file', accept='image/*', name='slides' multiple)
+          label.form__label(for='slides') Choose 3 slide images 
+        .form__group.right
+          button.btn.btn--small.btn--green #{tour ? 'Create tour' : 'Save changes'}
+        if tour
+          input(type="hidden", name="_id", value=tour._id)
+
+block append script
+  script(src="/js/manageTour.js")
+  script(src="/js/geocoder.js")

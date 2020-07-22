@@ -1,0 +1,68 @@
+extends layoutMe
+
+block append header
+  link(rel='stylesheet', href='/css/table.css')
+
+block contentMe
+  main.main
+    .ma-bt-md.right: a.btn.btn--green.btn--small(href="/manage/tours/new") New tour
+    .card-container.column-1
+      .table-responsive-vertical.shadow-z-1
+        table#table.table.table-hover
+          thead
+            tr
+              th #
+              th Name
+              th Location
+              th Difficulty
+              th Duration
+              th
+          tbody
+            each tour, i in tours
+              tr
+                td(data-title="#") #{i+1}
+                td(data-title="Name") #{tour.name}
+                td(data-title="StartLocation") #{tour.locations[0].description}
+                td(data-title="Difficulty") #{tour.difficulty[0].toUpperCase()}#{tour.difficulty.slice(1,99)}
+                td(data-title="Duration") #{tour.duration} days
+                td(data-title="Control")
+                  a(href=`/tours/${tour.slug}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-eye')
+                  a(href=`/manage/tours/${tour._id}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-edit')
+                  a.delete-tour(id=tour._id, href=''): svg.card__icon.red: use(xlink:href='/img/icons.svg#icon-trash')
+        .right.ma-bt-sm.ma-rt-md: h3: i Material Design - Responsive Table by 
+          a(href="https://codepen.io/zavoloklom/pen/IGkDz", target="_blank") Sergey Kupletsky
+      //- each tour in tours
+      //-   .card
+      //-     .card__header
+      //-       .card__picture
+      //-         .card__picture-overlay &nbsp;
+      //-         img.card__picture-img(src=`/img/tours/${tour.imageCover}`, alt=tour.name)
+
+      //-       h3.heading-tertirary: span #{tour.name}
+
+      //-     .card__details
+      //-       h4.card__sub-heading
+      //-       p.card__text #{tour.summary}
+      //-       .card__data
+      //-         svg.card__icon
+      //-           use(xlink:href='/img/icons.svg#icon-map-pin')
+      //-         span #{tour.startLocation.description}
+      //-       .card__data
+      //-         svg.card__icon
+      //-           use(xlink:href='/img/icons.svg#icon-calendar')
+      //-         span #{tour.startDates[0].toLocaleString('en-us', { month: 'long', year: 'numeric' })}
+      //-       .card__data
+      //-         svg.card__icon
+      //-           use(xlink:href='/img/icons.svg#icon-flag')
+      //-         span #{tour.locations.length} stops
+      //-       .card__data
+      //-         svg.card__icon
+      //-           use(xlink:href='/img/icons.svg#icon-user')
+      //-         span #{tour.maxGroupSize} people
+
+      //-     .card__footer
+      //-       a.btn.btn--green.btn--small(href=`/manage/tours/${tour._id}`) Manage
+      //-       button.btn.btn--small.delete-tour(id=tour._id) Delete
+
+block append script
+  script(src="/js/manageTour.js")

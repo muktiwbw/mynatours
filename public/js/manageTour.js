@@ -135,6 +135,8 @@ if (tourForm) {
 if (tourForm) tourForm.addEventListener('submit', async function(e) {
   e.preventDefault();
 
+  flash('warning', 'Now saving, might take awhile...', null);
+
   const _id = document.querySelector('input[type="hidden"][name="_id"]');
   const name = document.getElementById('name').value;
   const summary = document.getElementById('summary').value;
@@ -152,8 +154,11 @@ if (tourForm) tourForm.addEventListener('submit', async function(e) {
       coordinates: wrapper.children[2].value.split(','),
       type: 'Point'
     });
-  })();
+  })(); // * This is self calling function. Basically you declare a function and call it immediately 
+  const imageCover = document.querySelector('input#imageCover').files[0];
 
+  // * Basically you want to avoid using this in basic fields unless you want to send files.
+  // * If you're just sending simple text data, use object instead.
   const form = new FormData;
   form.append('name', name);
   form.append('summary', summary);
@@ -163,7 +168,14 @@ if (tourForm) tourForm.addEventListener('submit', async function(e) {
   form.append('maxGroupSize', maxGroupSize);
   form.append('price', price);
   form.append('startLocation', startLocation);
+  form.append('imageCover', imageCover);
 
+  // * Fields with multiple value need to be appended individually either using foreach or array map.
+  // * For file though, you don't need to specify the field name as an array in order to 
+  // * assign multiple value. The file input will store the file into file list (which is iterable) by default.
+  // * So even for single upload, you still need to specify the index, which is 0. For multiple upload, you will
+  // * need to iterate each one of them and append them individually into form data.
+  Array.from(document.querySelector('input#images').files, im => form.append('images', im));
   Array.from(document.querySelectorAll('input.startDates'), sd => form.append('startDates[]', new Date(sd.value).toISOString()));
   Array.from(document.querySelectorAll('.loc-input-wrapper'), loc => form.append('locations[]', JSON.stringify({ 
     description: loc.children[0].value,
@@ -176,9 +188,19 @@ if (tourForm) tourForm.addEventListener('submit', async function(e) {
   try {
     const res = _id ? await axios.patch(`http://127.0.0.1:3000/api/v1/tours/${_id.value}`, form, axiosConfig) : await axios.post(`http://127.0.0.1:3000/api/v1/tours`, form, axiosConfig);
 
-    console.log(res.data);
+    if (res) {
+      removeFlash();
+
+      flash('success', `Your data has successfully been ${_id ? 'updated': 'created'}`);
+      
+      setTimeout(() => {
+        window.location.href = '/manage/tours';
+      }, 2000);
+    }
   } catch (error) {
-    console.log(error.response);
+    removeFlash();
+    
+    flash('error', error.response.message);
   }
 });
 // * ===============================================================================
@@ -197,9 +219,12 @@ const deleteTour = async function(e) {
   try {
     const res = await axios.delete(`http://127.0.0.1:3000/api/v1/tours/${_id}`, axiosConfig);
 
-    if (res) this.parentElement.parentElement.remove();
+    if (res) {
+      flash('success', 'Your data has successfully been deleted');
+      this.parentElement.parentElement.remove();
+    }
   } catch (error) {
-    console.log(error, error.response);
+    flash('error', error.response.message);
   }
 };
 

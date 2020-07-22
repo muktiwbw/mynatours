@@ -125,6 +125,10 @@ body {
 .alert--error {
   background-color: #eb4d4b;
 }
+.alert--warning {
+  background-color: #c9e777;
+  color: rgb(44, 44, 44) !important;
+}
 
 .heading-secondary {
   font-size: 2.25rem;

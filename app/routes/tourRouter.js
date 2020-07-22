@@ -11,9 +11,9 @@ router.use('/:tourId/reviews', ReviewRouter);
 
 router.route('/')
       .post(
-        upload.array([
-          { name: 'cover', maxCount: 1 },
-          { name: 'slides', maxCount: 3 }
+        upload.fields([
+          { name: 'imageCover', maxCount: 1 },
+          { name: 'images', maxCount: 3 }
         ]),
         filterBody(
           'name', 'summary', 'description', 'difficulty', 
@@ -26,11 +26,15 @@ router.route('/')
 
 router.route('/:tourId')
       .patch(
-        upload.array([
-          { name: 'cover', maxCount: 1 },
-          { name: 'slides', maxCount: 3 }
+        upload.fields([
+          { name: 'imageCover', maxCount: 1 },
+          { name: 'images', maxCount: 3 }
         ]),
-        filterBody('name', 'summary', 'description', 'difficulty', 'duration', 'maxGroupSize', 'price'),
+        filterBody(
+          'name', 'summary', 'description', 'difficulty', 
+          'duration', 'maxGroupSize', 'price', 'startDates',
+          'locations', 'startLocation', 'guides'
+        ),
         allowedTo('admin'),
         TourController.updateOneTour
       )

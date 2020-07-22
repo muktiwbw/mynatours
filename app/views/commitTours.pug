@@ -67,9 +67,9 @@ block contentMe
                 .card__details
                   h1.card__sub-heading Location 1
                   .form__group.card__text.loc-input-wrapper
-                    input.locations.description.ma-bt-sm.form__input(required, type='text', placeholder='Location name (e.g. Heroes Monument)', value='Test')   
-                    input.locations.coordinate.ma-bt-sm.form__input(required, type='text', placeholder='Coordinates (e.g. 115.11280313746386,-1.6926391618314938)', idx='1', value='112.7378360257976,-7.246151790421763')   
-                    input.locations.day.ma-bt-sm.form__input(required, type='number', placeholder='What day (e.g. 2)', value='1')
+                    input.locations.description.ma-bt-sm.form__input(required, type='text', placeholder='Location name (e.g. Heroes Monument)')   
+                    input.locations.coordinate.ma-bt-sm.form__input(required, type='text', placeholder='Coordinates (e.g. 115.11280313746386,-1.6926391618314938)', idx='1')   
+                    input.locations.day.ma-bt-sm.form__input(required, type='number', placeholder='What day (e.g. 2)')
           .ma-bt-sm.right
             button.loc.btn.btn--small.ma-rt-sm(action='rm', evtSrc='loc') Shrink
             button.loc.btn.btn--small.btn--green(action='ad', evtSrc='loc') Expand
@@ -97,13 +97,18 @@ block contentMe
           .ma-bt-sm.right
             button.guide.btn.btn--small.ma-rt-sm(action='rm', evtSrc='guide') Shrink
         .form__group.form__photo-upload
-          input#cover.form__upload(type='file', accept='image/*', name='cover')
-          label.form__label(for='cover') Choose cover image
+          if tour.imageCover
+            img.form__user-photo(src=`/img/tours/${tour.imageCover}`, alt=tour.name)
+          input#imageCover.form__upload(type='file', accept='image/*', name='imageCover')
+          label.form__label(for='imageCover') Choose cover image
         .form__group.form__photo-upload
-          input#slides.form__upload(type='file', accept='image/*', name='slides' multiple)
-          label.form__label(for='slides') Choose 3 slide images 
+          if tour.images
+            for img in tour.images
+              img.form__user-photo(src=`/img/tours/${img}`, alt=tour.name)
+          input#images.form__upload(type='file', accept='image/*', name='images' multiple)
+          label.form__label(for='images') Choose 3 slide images 
         .form__group.right
-          button.btn.btn--small.btn--green #{tour ? 'Create tour' : 'Save changes'}
+          button.btn.btn--small.btn--green #{!tour ? 'Create tour' : 'Save changes'}
         if tour
           input(type="hidden", name="_id", value=tour._id)
 

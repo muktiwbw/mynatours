@@ -3,6 +3,10 @@ extends layout
 block append header
   script(src='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.js')
   link(href='https://api.mapbox.com/mapbox-gl-js/v1.11.1/mapbox-gl.css', rel='stylesheet')
+  script(src="https://unpkg.com/axios/dist/axios.min.js")
+  script(src="https://js.stripe.com/v3/")
+  if jwt
+    meta(jwt=jwt)
 
 block content
   section.section-header
@@ -97,7 +101,17 @@ block content
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text #{tour.duration} days. #{tour.locations.length} adventure#{tour.locations.length > 1 ? 's' : ''}. Infinite memories. Make it yours today!
-        button.btn.btn--green.span-all-rows Book tour now!
+        button#booking.btn.btn--green.span-all-rows Book tour now!
+        //- button.btn.btn--green.ma-bt-sm Book tour now!
+        #bookingDateWrapper.form__group.hide
+          select#bookingDate.form__input(tour-id=tour._id)
+            option.bookingDateReset(value='reset') Please select a tour date
+            for date in tour.startDates
+              option(value=date) #{date.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' })}
 
 block append script
+  script(src="/js/flash.js")
   script(src="/js/mapbox.js")
+  script(src="/js/booking.js")
+  if jwt
+    script(src="/js/axiosConfig.js")

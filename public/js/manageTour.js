@@ -135,7 +135,7 @@ if (tourForm) {
 if (tourForm) tourForm.addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  flash('warning', 'Now saving, might take awhile...', null);
+  flash('warning', 'Saving, might take awhile...', null);
 
   const _id = document.querySelector('input[type="hidden"][name="_id"]');
   const name = document.getElementById('name').value;

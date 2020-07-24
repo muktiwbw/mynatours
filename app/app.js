@@ -6,10 +6,14 @@ const UserRouter = require('./routes/userRouter');
 const TourRouter = require('./routes/tourRouter');
 const ReviewRouter = require('./routes/reviewRouter');
 const ViewRouter = require('./routes/viewRouter');
+const BookingRouter = require('./routes/bookingRouter');
 // * Middlewares
 const AuthMiddleware = require('./middlewares/authMiddleware');
 const { globalErrorHandler } = require('./utils/error');
 var cookieParser = require('cookie-parser');
+
+// ! Temporary
+const BookingController = require('./controllers/bookingController');
 
 const app = express();
 const routePrefix = '/api/v1';
@@ -23,6 +27,10 @@ app.use(cookieParser());
 
 app.use(ViewRouter);
 
+// ! TEMPORARY
+app.route('/tours/:tour/bookings/create')
+      .get(BookingController.createOneBooking);
+
 // * Routes that don't need authentication
 app.use(`${routePrefix}/auth`, AuthRouter);
 
@@ -32,6 +40,7 @@ app.use(AuthMiddleware.authenticate);
 app.use(`${routePrefix}/tours`, TourRouter);
 app.use(`${routePrefix}/users`, UserRouter);
 app.use(`${routePrefix}/reviews`, ReviewRouter);
+app.use(`${routePrefix}/bookings`, BookingRouter);
 
 // * Global error handler
 app.use(globalErrorHandler);

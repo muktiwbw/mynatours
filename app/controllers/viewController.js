@@ -1,6 +1,7 @@
 const { catchAsync } = require('./../utils/query');
 const Tour = require('./../models/tourModel');
 const User = require('./../models/userModel');
+const Booking = require('./../models/bookingModel');
 const { AppError } = require('../utils/error');
 
 exports.getLoginForm = (req, res) => {
@@ -83,6 +84,25 @@ exports.manageToursById = catchAsync(async (req, res, next) => {
   });
 });
 
+const getTourAvailability = (tour) => {
+  const aggr = [
+    {
+      $match: { tour: tour._id }
+    },
+    {
+      $group: {
+        _id: '$startDate',
+        books: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { startDate: 1 }
+    }
+  ];
+
+  return Booking.aggregate(aggr);
+};
+
 exports.getOneTour = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const tour = await Tour
@@ -92,13 +112,18 @@ exports.getOneTour = catchAsync(async (req, res, next) => {
                         path: 'reviews',
                         populate: { path: 'user', select: 'name photo' }
                       });
-                      
+
+  const avb = await getTourAvailability(tour._id);
+  
   if (!tour) {
     return next(new AppError('Tour not found', 404, true));
   }
+  
+  res.locals.jwt = req.cookies.jwt;
                       
   return res.render('tour', { 
     title: tour.name,
-    tour
+    tour,
+    avb
   });
 });

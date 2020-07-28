@@ -3,7 +3,6 @@ const db = require('./../utils/db');
 const schema = new db.Schema({
   review: {
     type: String,
-    required: [ true, 'Missing review field' ],
     trim: true
   },
   rating: {

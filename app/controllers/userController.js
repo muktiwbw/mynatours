@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const path = require('path');
 const { avatar } = require('./../utils/photo');
+const Tour = require('../models/tourModel');
 
 exports.getUsers = catchAsync(async (req, res, next) => {
   const { extraQuery } = req;
@@ -36,7 +37,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     // * 1.5 Generate user image filename
     const filename = `${role}-${_id}-${Date.now()}${path.extname(req.file.originalname)}`;
     
-    await avatar(req.file, filename, req.user.photo);
+    await avatar(req.file, filename, req.user.photo != 'default.jpg' ? req.user.photo : null);
 
     body.photo = filename;
   }
@@ -131,5 +132,54 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
           data: {
             token
           }
+        });
+});
+
+exports.addToFavourites = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const tour = await Tour.findById(req.params.tourId);
+  const favTour = {
+    _id: tour._id,
+    slug: tour.slug,
+    name: tour.name,
+    price: tour.price
+  };
+
+  if (!user.favourites.map(fv => fv._id).includes(req.params.tourId)) {
+    user.favourites.push(favTour);
+  } else {
+    return next(new AppError('Tour has been added to favourites', 400));
+  }
+
+  await user.save();
+
+  return res
+        .status(201)
+        .json({
+          status: 'success',
+          message: 'Tour has been added to favourites',
+          data: {
+            tour: favTour
+          }
+        });
+});
+
+exports.removeFromFavourites = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const tourIds = user.favourites.map(fv => fv._id);
+  
+  if (tourIds.includes(req.params.tourId)) {
+    user.favourites.splice(tourIds.indexOf(req.params.tourId), 1);
+  } else {
+    return next(new AppError('Tour has been removed from favourites', 400));
+  }
+
+  await user.save();
+
+  return res
+        .status(201)
+        .json({
+          status: 'success',
+          message: 'Tour has been removed from favourites'
         });
 });

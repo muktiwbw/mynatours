@@ -12,11 +12,28 @@ exports.register = catchAsync(async (req, res, next) => {
     role, createdAt 
   } = await User.create(req.filteredBody);
 
+    /**
+   * * Delay for 1 second so that the token issued time 
+   * * is 1 second longer than passwordUpdatedAt time.
+   * 
+   * * This is so the user can automatically login after registered
+   * */ 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   const token = await promisify(jwt.sign)(
     { _id }, 
     process.env.APP_SECRET, 
     { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN }
   );
+
+  const cookieOption = {
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+    httpOnly: true
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
+
+  res.cookie('jwt', token, cookieOption);
 
   return res
         .status(201)

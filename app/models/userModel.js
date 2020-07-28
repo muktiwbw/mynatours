@@ -54,8 +54,18 @@ const schema = new db.Schema({
     type: Date,
     default: Date.now(),
     select: false
-  }
-})
+  },
+  favourites: [{
+    _id: { type: db.Schema.ObjectId, required: true },
+    slug: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    addedDate: { type: Date, required: true, default: Date.now() }
+  }]
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
 schema.pre('save', async function(next) {
   if (this.isModified('password')) {
@@ -76,5 +86,17 @@ schema.pre(/^find/, function(next) {
 schema.methods.passwordMatches = (string, hash) => {
   return bcrypt.compare(string, hash);
 };
+
+schema.virtual('bookings', {
+  ref: 'Booking',
+  localField: '_id',
+  foreignField: 'user'
+});
+
+schema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'user'
+});
 
 module.exports = db.model('User', schema, 'users');

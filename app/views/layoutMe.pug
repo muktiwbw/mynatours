@@ -19,8 +19,8 @@ block content
         ul.side-nav
           +navItem('/me', 'settings', 'Setting', (page === 'me'))
           if currentUser.role === 'user'
-            +navItem('#', 'briefcase', 'My bookings', false)
-            +navItem('#', 'star', 'My reviews', false)
+            +navItem('/me/favourites', 'heart', 'My favourites', (page === 'meFavs'))
+            +navItem('/me/reviews', 'star', 'My reviews', (page === 'meRevs'))
             +navItem('#', 'credit-card', 'Billing', false)
         if currentUser.role === 'admin'
           .admin-nav

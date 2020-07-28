@@ -8,8 +8,39 @@ exports.createOneTour = catchAsync(async (req, res, next) => {
 
   body.startLocation = JSON.parse(body.startLocation);
   body.locations = body.locations.map(loc => JSON.parse(loc));
+  body.startDates = body.startDates.map(sd => JSON.parse(sd));
 
   const tour = await Tour.create(body);
+
+  const fileImageCover = [];
+  const fileImages = [];
+
+  for (const cov of req.files.imageCover) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    fileImageCover.push({
+      file: cov.buffer,
+      filename: `tours/tour-${tour._id}-${Date.now()}${path.extname(cov.originalname)}`,
+      oldFile: tour.imageCover ? `tours/${tour.imageCover}` : null
+    });
+  }
+
+  for (const [i, img] of req.files.images.entries()) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    fileImages.push({
+      file: img.buffer,
+      filename: `tours/tour-${tour._id}-${Date.now()}${path.extname(img.originalname)}`,
+      oldFile: tour.images[i] ? `tours/${tour.images[i]}` : null
+    });
+  }
+
+  multiple(fileImageCover);
+  multiple(fileImages);
+
+  tour.imageCover = fileImageCover[0].filename.split('/')[1];
+  tour.images = fileImages.map(img => img.filename.split('/')[1]);
+  await tour.save();
 
   return res
         .status(201)
@@ -27,6 +58,7 @@ exports.updateOneTour = catchAsync(async (req, res, next) => {
 
   body.startLocation = JSON.parse(body.startLocation);
   body.locations = body.locations.map(loc => JSON.parse(loc));
+  body.startDates = body.startDates.map(sd => JSON.parse(sd));
 
   // * First tour update for basic text fields
   const tour = await Tour.findByIdAndUpdate(req.params.tourId, body, { new: true, runValidators: true });

@@ -3,6 +3,8 @@ const Tour = require('./../models/tourModel');
 const User = require('./../models/userModel');
 const Booking = require('./../models/bookingModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
+const mongoose = require('mongoose');
+const { AppError } = require('../utils/error');
 
 const getStripeCheckoutSession = async (booking) => {
   const stripeCustomer = await stripe.customers.create({
@@ -60,11 +62,27 @@ exports.checkout = catchAsync(async (req, res, next) => {
           });
 });
 
+const updateTourStatus = async (booking) => {
+  const tour = await Tour.findById(booking.tour);
+
+  startDate = tour.startDates.id(booking.startDate);
+
+  if (!startDate.participants.includes(booking._id)) startDate.participants.push(booking._id);
+
+  if (startDate.participants.length >= tour.maxGroupSize) startDate.isSoldOut = true;
+  
+  await tour.save();
+  
+  return tour;
+};
+
 exports.createOneBooking = catchAsync(async (req, res, next) => {
   const { tour } = req.params;
   const { startDate, price, user } = req.query;
 
   const booking = await Booking.create({ tour, user, startDate, price });
+  
+  const tourStatusUpdated = await updateTourStatus(booking);
 
-  if (booking) res.redirect('/me');
+  return tourStatusUpdated ? res.redirect('/me') : AppError('There has been an error registering your booking', 500, true);
 });

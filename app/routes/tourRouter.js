@@ -2,6 +2,7 @@ const express = require('express');
 const TourController = require('./../controllers/tourController');
 const ReviewRouter = require('./../routes/reviewRouter');
 const BookingRouter = require('./../routes/bookingRouter');
+const UserRouter = require('./../routes/userRouter');
 const { allowedTo } = require('./../middlewares/authMiddleware');
 const { filterBody } = require('./../utils/request');
 const { upload } = require('../middlewares/fileMiddleware');
@@ -10,6 +11,7 @@ const router = express.Router();
 
 router.use('/:tourId/reviews', ReviewRouter);
 router.use('/:tourId/bookings', BookingRouter);
+router.use('/:tourId/users', UserRouter);
 
 router.route('/')
       .post(

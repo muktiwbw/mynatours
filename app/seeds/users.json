@@ -5,7 +5,7 @@
     "email": "admin@natours.io",
     "role": "admin",
     "active": true,
-    "photo": "user-1.jpg",
+    "photo": "default.jpg",
     "password": "password123",
     "passwordConfirm": "password123"
   },

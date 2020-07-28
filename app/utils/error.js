@@ -13,8 +13,10 @@ exports.AppError = AppError;
 
 exports.globalErrorHandler = (err, req, res, next) => {
   if (err.isRendered) {
-    return res.render('error', { title: 'Error', message: err.message });
+    return res.status(err.statusCode || 500).render('error', { title: 'Error', message: err.message });
   }
+
+  console.log(err);
   
   return res
           .status(err.statusCode || 500)

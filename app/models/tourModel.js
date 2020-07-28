@@ -71,7 +71,15 @@ const schema = new db.Schema({
     default: 0,
     min: 0
   },
-  startDates: [ Date ],
+  startDates: [{
+    startDate: Date,
+    isSoldOut: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    participants: [db.Schema.ObjectId]
+  }],
   startLocation: {
     type: {
       type: String,
@@ -137,6 +145,12 @@ schema.virtual('reviews', {
   localField: '_id',
   foreignField: 'tour',
   options: { limit: 5 }
+});
+
+schema.virtual('bookings', {
+  ref: 'Booking',
+  localField: '_id',
+  foreignField: 'tour'
 });
 
 module.exports = db.model('Tour', schema, 'tours');

@@ -176,7 +176,7 @@ if (tourForm) tourForm.addEventListener('submit', async function(e) {
   // * So even for single upload, you still need to specify the index, which is 0. For multiple upload, you will
   // * need to iterate each one of them and append them individually into form data.
   Array.from(document.querySelector('input#images').files, im => form.append('images', im));
-  Array.from(document.querySelectorAll('input.startDates'), sd => form.append('startDates[]', new Date(sd.value).toISOString()));
+  Array.from(document.querySelectorAll('input.startDates'), sd => form.append('startDates[]', JSON.stringify({ startDate: new Date(sd.value).toISOString() })));
   Array.from(document.querySelectorAll('.loc-input-wrapper'), loc => form.append('locations[]', JSON.stringify({ 
     description: loc.children[0].value,
     coordinates: loc.children[1].value.split(','),

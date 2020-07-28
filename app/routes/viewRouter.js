@@ -10,6 +10,20 @@ router.route('/')
 router.route('/me')
       .get(AuthMiddleware.isLoggedIn, ViewController.getMe);
 
+router.route('/me/favourites')
+      .get(
+            AuthMiddleware.isLoggedIn,
+            AuthMiddleware.allowedToWeb('user'), 
+            ViewController.getAllFavourites
+      );
+
+router.route('/me/reviews')
+      .get(
+            AuthMiddleware.isLoggedIn,
+            AuthMiddleware.allowedToWeb('user'), 
+            ViewController.getAllReviews
+      );
+
 router.route('/manage/tours')
       .get(
             AuthMiddleware.isLoggedIn,
@@ -39,5 +53,8 @@ router.route('/logout')
 
 router.route('/login')
       .get(AuthMiddleware.allowedToWeb('guest'), ViewController.getLoginForm);
+
+router.route('/register')
+      .get(AuthMiddleware.allowedToWeb('guest'), ViewController.getRegisterForm);
 
 module.exports = router;

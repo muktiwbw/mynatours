@@ -4,7 +4,7 @@ const AuthMiddleware = require('./../middlewares/authMiddleware');
 const { upload } = require('./../middlewares/fileMiddleware');
 const Request = require('./../utils/request');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.route('/')
       .get(
@@ -16,7 +16,7 @@ router.route('/')
 router.route('/updateMe')
       .patch(
         upload.single('photo'),
-        Request.filterBody('name', 'photo', 'email'),
+        Request.filterBody('name', 'email'),
         UserController.updateMe
       );
       
@@ -30,6 +30,18 @@ router.route('/deleteMe')
       .delete(
         AuthMiddleware.allowedTo('user'),
         UserController.deleteMe
+      );
+      
+router.route('/addToFavourites')
+      .post(
+        AuthMiddleware.allowedTo('user'),
+        UserController.addToFavourites
+      );
+
+router.route('/removeFromFavourites')
+      .post(
+        AuthMiddleware.allowedTo('user'),
+        UserController.removeFromFavourites
       );
 
 module.exports = router;

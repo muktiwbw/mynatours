@@ -1,0 +1,33 @@
+extends layoutMe
+
+block append header
+  link(rel='stylesheet', href='/css/table.css')
+
+block contentMe
+  main.main
+    .card-container.column-1
+      h2.heading-secondary My Reviews
+      .table-responsive-vertical.shadow-z-1
+        table#table.table.table-hover
+          thead
+            tr
+              th #
+              th Name
+              th Review
+              th Rating
+              th
+          tbody
+            each rev, i in revs
+              tr
+                td(data-title="#") #{i+1}
+                td(data-title="Name") #{rev.tour.name}
+                td(data-title="Review") #{`${rev.review.slice(0, 50)}${rev.review.length>50 ? '...' : ''}`}
+                td(data-title="Rating") #{rev.rating}
+                td(data-title="Control")
+                  a(href=`/tours/${rev.tour.slug}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-edit')
+                  a.delete-rev(data-review_id=rev._id, data-tour_id=rev.tour._id, href=''): svg.card__icon.red: use(xlink:href='/img/icons.svg#icon-trash')
+        .right.ma-bt-sm.ma-rt-md: h3: i Material Design - Responsive Table by 
+          a(href="https://codepen.io/zavoloklom/pen/IGkDz", target="_blank") Sergey Kupletsky
+
+block append script
+  script(src="/js/reviews.js")

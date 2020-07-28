@@ -1,0 +1,33 @@
+extends layoutMe
+
+block append header
+  link(rel='stylesheet', href='/css/table.css')
+
+block contentMe
+  main.main
+    .card-container.column-1
+      h2.heading-secondary My Favourites
+      .table-responsive-vertical.shadow-z-1
+        table#table.table.table-hover
+          thead
+            tr
+              th #
+              th Name
+              th Price
+              th Added on
+              th
+          tbody
+            each fav, i in favs
+              tr
+                td(data-title="#") #{i+1}
+                td(data-title="Name") #{fav.name}
+                td(data-title="Price") #{fav.price}
+                td(data-title="AddedDate") #{fav.addedDate.toLocaleString()}
+                td(data-title="Control")
+                  a(href=`/tours/${fav.slug}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-eye')
+                  a.delete-fav(id=fav._id, href=''): svg.card__icon.red: use(xlink:href='/img/icons.svg#icon-trash')
+        .right.ma-bt-sm.ma-rt-md: h3: i Material Design - Responsive Table by 
+          a(href="https://codepen.io/zavoloklom/pen/IGkDz", target="_blank") Sergey Kupletsky
+
+block append script
+  script(src="/js/favourites.js")

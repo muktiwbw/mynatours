@@ -1,0 +1,31 @@
+extends layout
+
+block append header
+  script(src="https://unpkg.com/axios/dist/axios.min.js")
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary.ma-bt-lg Create a new account
+      form.form
+        .form__group
+          label.form__label(for='name') Full name
+          input#name.form__input(type='text', placeholder='Eren Kruger', required, autofocus)
+        .form__group
+          label.form__label(for='email') Email address
+          input#email.form__input(type='email', placeholder='you@example.com', required)
+        .form__group.ma-bt-md
+          label.form__label(for='password') Password
+          input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+        .form__group.ma-bt-md
+          label.form__label(for='passwordConfirm') Confirm password
+          input#passwordConfirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+        .form__group
+          button.btn.btn--green Register
+        input(type="hidden", name="type", value="register")
+        .right 
+          a.no-decor(href="/login") Already have an account? Login.
+
+block append script
+  script(src="/js/flash.js")
+  script(src="/js/auth.js")

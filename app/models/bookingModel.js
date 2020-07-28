@@ -12,7 +12,7 @@ const schema = new db.Schema({
     required: [ true, 'A booking must have a tour' ]
   },
   startDate: {
-    type: Date,
+    type: db.Schema.ObjectId,
     required: [ true, 'A booking must have a start date' ]
   },
   price: {
@@ -21,6 +21,6 @@ const schema = new db.Schema({
   }
 });
 
-schema.index({ tour: 1, user: 1 }, { unique: true });
+schema.index({ startDate: 1, user: 1 }, { unique: true });
 
 module.exports = db.model('Booking', schema, 'bookings');

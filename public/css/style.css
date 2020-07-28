@@ -91,6 +91,18 @@ body {
   margin-bottom: 3.5rem !important;
 }
 
+.pa-tp-sm {
+  padding-top: 1rem !important;
+}
+
+.pa-tp-lg {
+  padding-top: 3.5rem !important;
+}
+
+.pa-tp-xl {
+  padding-top: 10rem !important;
+}
+
 .right {
   text-align: right !important;
 }
@@ -1315,7 +1327,11 @@ body {
 }
 
 textarea.form__input.tall {
-  height: 250px;
+  height: 25rem;
+}
+
+textarea.form__input.medium {
+  height: 15rem;
 }
 
 .form__group:not(:last-child) {
@@ -1427,4 +1443,44 @@ textarea.form__input.tall {
 
 .hide {
   display: none !important;
+}
+
+a.btn-fav {
+  color: #f7f7f7 !important;
+}
+
+a.btn-fav:hover {
+  padding: 0.5rem 1rem;
+  background-color: rgb(224, 104, 128) !important;
+}
+
+a.btn-fav.isFav {
+  padding: 0.5rem 1rem;
+  background-color: rgb(224, 104, 128) !important;
+}
+
+a.no-decor {
+  text-decoration: none;
+}
+
+a.no-decor:visited {
+  text-decoration: none;
+  color: #212121;
+}
+
+.review-box {
+  padding: 5rem !important;
+}
+
+.review-star {
+  cursor: pointer;
+  fill: #c0c0c0;
+}
+
+.review-star.active {
+  fill: #55c57a;
+}
+
+.review-star.commit-active {
+  fill: #55c57a !important;
 }

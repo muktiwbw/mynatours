@@ -21,12 +21,23 @@ const updateTourRating = catchAsync(async (tourId) => {
     }
   ];
 
-  const { ratingsQuantity, ratingsAverage } = (await Review.aggregate(aggr))[0];
+  const stat = await Review.aggregate(aggr);
+  let payload;
 
-  await Tour.findByIdAndUpdate(tourId, { 
-    ratingsQuantity, 
-    ratingsAverage: Math.round(ratingsAverage * 10) / 10 
-  }, { runValidators: true });
+  if (stat.length > 0) {
+    const { ratingsQuantity, ratingsAverage } = stat[0];
+    payload = { 
+      ratingsQuantity, 
+      ratingsAverage: Math.round(ratingsAverage * 10) / 10 
+    };
+  } else {
+    payload = {
+      ratingsQuantity: 0,
+      ratingsAverage: 0
+    };
+  }
+
+  await Tour.findByIdAndUpdate(tourId, payload, { runValidators: true });
 });
 
 exports.createOneReview = catchAsync(async (req, res, next) => {
@@ -35,7 +46,7 @@ exports.createOneReview = catchAsync(async (req, res, next) => {
   const tour = req.params.tourId;
 
   // * 2. Create review
-  const { review, rating } = req.body;
+  const { review, rating } = req.filteredBody;
   const rev = await Review.create({ review, rating, user, tour });
 
   // * 2.5. Calculate rating quantity and average on tour 
@@ -45,9 +56,59 @@ exports.createOneReview = catchAsync(async (req, res, next) => {
   return res
         .status(201)
         .json({
-          status: 'created',
+          status: 'success',
           data: {
             review: rev
           }
         });
 });
+
+exports.updateOneReview = catchAsync(async (req, res, next) => {
+  // * 1. Get user id and tour id
+  const tour = req.params.tourId;
+  const reviewId = req.params.reviewId;
+
+  // * 2. Create review
+  const { review, rating } = req.filteredBody;
+  
+  const rev = await Review.findById(reviewId);
+  
+  const oldRating = rev.rating;
+
+  rev.review = review;
+  rev.rating = rating;
+  await rev.save();
+
+  // * 2.5. Calculate rating quantity and average on tour 
+  if (rating !== oldRating) updateTourRating(tour);
+
+  // * 3. Return
+  return res
+        .status(201)
+        .json({
+          status: 'success',
+          data: {
+            review: rev
+          }
+        });
+});
+
+exports.deleteOneReview = catchAsync(async (req, res, next) => {
+  // * 1. Get review id and tour id
+  const reviewId = req.params.reviewId;
+  const tourId = req.params.tourId;
+  
+  // * 2. Delete review
+  await Review.findByIdAndDelete(reviewId);
+
+  // * 2.5. Calculate rating quantity and average on tour 
+  updateTourRating(tourId);
+
+  // * 3. Return
+  return res
+        .status(204)
+        .json({
+          status: 'deleted'
+        });
+});
+

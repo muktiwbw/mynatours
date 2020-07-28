@@ -85,6 +85,9 @@
   text-decoration: none;
   color: #212121;
 }
+.table-responsive-vertical a:hover {
+  color: #55c57a;
+}
 .table {
   width: 100%;
   max-width: 100%;

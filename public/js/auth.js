@@ -3,7 +3,7 @@ const login = async (email, password) => {
   flash('warning', 'Logging you in...', null);
 
   try {
-    const res = await axios.post('http://127.0.0.1:3000/api/v1/auth/login', { email, password });
+    const res = await axios.post('https://cosmic-desert-natours.herokuapp.com/api/v1/auth/login', { email, password });
 
     if (res.data.status === 'success') {
       removeFlash();
@@ -24,7 +24,7 @@ const register = async (name, email, password, passwordConfirm) => {
   removeFlash();
   flash('warning', 'Creating your account...', null);
   try {
-    const res = await axios.post('http://127.0.0.1:3000/api/v1/auth/register', { name, email, password, passwordConfirm });
+    const res = await axios.post('https://cosmic-desert-natours.herokuapp.com/api/v1/auth/register', { name, email, password, passwordConfirm });
 
     if (res.data.status === 'created') {
       removeFlash();
@@ -41,7 +41,7 @@ const forgotPassword = async (email) => {
   removeFlash();
   flash('warning', 'Sending reset password token to your email...', null);
   try {
-    const res = await axios.post('http://127.0.0.1:3000/api/v1/auth/forgotPassword', { email });
+    const res = await axios.post('https://cosmic-desert-natours.herokuapp.com/api/v1/auth/forgotPassword', { email });
 
     if (res.data.status === 'success') {
       removeFlash();
@@ -57,7 +57,7 @@ const resetPassword = async (password, passwordConfirm, token) => {
   removeFlash();
   flash('warning', 'Resetting your password...', null);
   try {
-    const res = await axios.patch('http://127.0.0.1:3000/api/v1/auth/resetPassword', { password, passwordConfirm, token });
+    const res = await axios.patch('https://cosmic-desert-natours.herokuapp.com/api/v1/auth/resetPassword', { password, passwordConfirm, token });
 
     if (res.data.status === 'updated') {
       removeFlash();

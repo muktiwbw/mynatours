@@ -25,11 +25,12 @@ block content
           svg.heading-box__icon
             use(xlink:href='/img/icons.svg#icon-map-pin')
           span.heading-box__text #{tour.startLocation.description}
-      .heading-box__group
-        a#favBtn(class=`no-decor btn-fav ${isFavourite ? 'isFav' : ''}`, href='#', data-tour_id=tour._id, isFavourite=isFavourite): .heading-box__detail
-          svg.heading-box__icon
-            use(xlink:href='/img/icons.svg#icon-heart')
-          span#favBtnText.heading-box__text #{!isFavourite ? 'Add to favourite' : 'Remove from favourite'}
+      if currentUser
+        .heading-box__group
+          a#favBtn(class=`no-decor btn-fav ${isFavourite ? 'isFav' : ''}`, href='#', data-tour_id=tour._id, isFavourite=isFavourite): .heading-box__detail
+            svg.heading-box__icon
+              use(xlink:href='/img/icons.svg#icon-heart')
+            span#favBtnText.heading-box__text #{!isFavourite ? 'Add to favourite' : 'Remove from favourite'}
 
   section.section-description
     .overview-box
@@ -91,7 +92,7 @@ block content
           .reviews__rating
             // Loop stars based on rating floored
             each star in [1, 2, 3, 4, 5]
-              svg(class=`reviews__star reviews__star${star <= review.rating ? '--active' : ''}`)
+              svg(class=`reviews__star reviews__star${star <= review.rating ? '--active' : '--inactive'}`)
                 use(xlink:href="/img/icons.svg#icon-star")
 
 
@@ -123,15 +124,18 @@ block content
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text #{tour.duration} days. #{tour.locations.length} adventure#{tour.locations.length > 1 ? 's' : ''}. Infinite memories. Make it yours today!
-        - const allSoldOut = (tour.startDates.map(sd => sd.participants.length)).reduce((b, a) => b + a) >= tour.maxGroupSize
-        button#booking(class=`btn ${!allSoldOut ? 'btn--green' : ''} span-all-rows`, disabled=allSoldOut ? true : false) #{!allSoldOut ? 'Book tour now!' : 'SOLD OUT'}
-        if !allSoldOut
-          #bookingDateWrapper.form__group.hide
-            select#bookingDate.form__input(tour-id=tour._id)
-              option.bookingDateReset(value='reset') Please pick a date
-              for date in tour.startDates
-                if !date.isSoldOut && !tour.bookings.map(bk => bk.startDate.toString()).includes(date._id.toString())
-                  option(value=date._id) (#{date.participants.length}/#{tour.maxGroupSize}) #{date.startDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' })}
+        if !currentUser
+          a.btn.btn--green.span-all-rows(href='/login') Login to book
+        else
+          - const allSoldOut = (tour.startDates.map(sd => sd.participants.length)).reduce((b, a) => b + a) >= tour.maxGroupSize
+          button#booking(class=`btn ${!allSoldOut ? 'btn--green' : ''} span-all-rows`, disabled=allSoldOut ? true : false) #{!allSoldOut ? 'Book tour now!' : 'SOLD OUT'}
+          if !allSoldOut
+            #bookingDateWrapper.form__group.hide
+              select#bookingDate.form__input(tour-id=tour._id)
+                option.bookingDateReset(value='reset') Please pick a date
+                for date in tour.startDates
+                  if !date.isSoldOut && !tour.bookings.map(bk => bk.startDate.toString()).includes(date._id.toString())
+                    option(value=date._id) (#{date.participants.length}/#{tour.maxGroupSize}) #{date.startDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'short' })}
 
 block append script
   script(src="/js/flash.js")

@@ -75,6 +75,10 @@ body {
   margin-bottom: 2rem !important;
 }
 
+.ma-bt-xs {
+  margin-bottom: 1rem !important;
+}
+
 .ma-tp-sm {
   margin-top: 2rem !important;
 }
@@ -1468,6 +1472,11 @@ a.no-decor:visited {
   color: #212121;
 }
 
+a.no-decor:hover {
+  text-decoration: none;
+  color: #55c57a;
+}
+
 .review-box {
   padding: 5rem !important;
 }
@@ -1483,4 +1492,8 @@ a.no-decor:visited {
 
 .review-star.commit-active {
   fill: #55c57a !important;
+}
+
+.text-larger {
+  font-size: larger;
 }

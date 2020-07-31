@@ -57,4 +57,13 @@ router.route('/login')
 router.route('/register')
       .get(AuthMiddleware.allowedToWeb('guest'), ViewController.getRegisterForm);
 
+router.route('/verifyEmail/:token')
+      .get(AuthMiddleware.allowedToWeb('guest'), ViewController.verifyEmail);
+
+router.route('/forgotPassword')
+      .get(AuthMiddleware.allowedToWeb('guest'), ViewController.getForgotPasswordForm);
+
+router.route('/resetPassword/:token')
+      .get(AuthMiddleware.allowedToWeb('guest'), ViewController.getResetPasswordForm);
+
 module.exports = router;

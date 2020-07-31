@@ -12,35 +12,21 @@ exports.register = catchAsync(async (req, res, next) => {
     role, createdAt 
   } = await User.create(req.filteredBody);
 
-    /**
-   * * Delay for 1 second so that the token issued time 
-   * * is 1 second longer than passwordUpdatedAt time.
-   * 
-   * * This is so the user can automatically login after registered
-   * */ 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  const token = await promisify(jwt.sign)(
-    { _id }, 
-    process.env.APP_SECRET, 
-    { expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN }
-  );
-
-  const cookieOption = {
-    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
-    httpOnly: true
-  };
-
-  if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
-
-  res.cookie('jwt', token, cookieOption);
+  const token = await promisify(jwt.sign)({ _id }, process.env.APP_SECRET);
+  
+  await mailer.send({
+    from: process.env.MAIL_ADDRESS,
+    to: email,
+    subject: 'Email Verification',
+    html: `To verify your email, please visit this link: <a href="http://127.0.0.1:3000/verifyEmail/${token}">Verify email.</a>`
+  });
 
   return res
         .status(201)
         .json({
           status: 'created',
+          message: 'You\'re successfully registered. Please check your email for verification.',
           data: {
-            token,
             user: {
               _id, name, 
               photo, email, 
@@ -61,6 +47,11 @@ exports.login = catchAsync(async (req, res, next) => {
   // * 3. Check if user exist and password match
   if (!user || !(await user.passwordMatches(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
+  }
+
+  // * 3.25. Check if email is verified
+  if (!user.emailVerified) {
+    return next(new AppError('Your email is not verified. Please check your inbox.', 400));
   }
 
   // * 3.5 Deconstruct _id from user
@@ -104,7 +95,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const now = new Date(Date.now()).getTime()
 
   if (now <= nextPasswordUpdate) return next(new AppError('You can only reset password once every 24 hours', 400))
-  
 
   // * 3. Sign a token
   const { _id } = user;
@@ -119,7 +109,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     from: process.env.MAIL_ADDRESS,
     to: email,
     subject: 'Reset Password',
-    text: `To reset your password, please send a PATCH request to /auth/resetPassword/${token}`
+    html: `To reset your password, please visit this link: <a href="http://127.0.0.1:3000/resetPassword/${token}">Reset password.</a>`
   });
 
   // * 5. Return
@@ -133,13 +123,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // * 1. If token params and new password and passwordConfirm is provided
-  if (!req.params.token) return next(new AppError('Missing reset token', 400));
+  if (!req.filteredBody.token) return next(new AppError('Missing reset token', 400));
   if (!req.filteredBody.password || !req.filteredBody.passwordConfirm) {
     return next(new AppError('Missing password or password confirm', 400));
   }
 
   // * 2. Verify token => get the payload which is the user ID
-  const { _id } = await promisify(jwt.verify)(req.params.token, process.env.APP_SECRET);
+  const { _id } = await promisify(jwt.verify)(req.filteredBody.token, process.env.APP_SECRET);
 
   // * 3. Check if user exists
   const user = await User.findById(_id).select('+passwordUpdatedAt');
@@ -174,8 +164,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
         .status(201)
         .json({
           status: 'updated',
+          message: 'Your password has already been updated',
           data: {
-            message: 'Your password has already been updated',
             token
           }
         });

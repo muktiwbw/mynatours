@@ -17,8 +17,10 @@ block content
         .form__group
           button.btn.btn--green Login
         input(type="hidden", name="type", value="login")
+        .right.ma-bt-xs
+          a.no-decor.text-larger(href="/forgotPassword") Forgot my password
         .right 
-          a.no-decor(href="/register") Don't have an account? Create one.
+          a.no-decor.text-larger(href="/register") Don't have an account? Create one
 
 block append script
   script(src="/js/flash.js")

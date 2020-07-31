@@ -27,9 +27,9 @@ router.route('/forgotPassword')
 	  AuthController.forgotPassword
 	);
 
-router.route('/resetPassword/:token')
+router.route('/resetPassword')
 	.patch(
-	  Request.filterBody('password', 'passwordConfirm'),
+	  Request.filterBody('token', 'password', 'passwordConfirm'),
 	  AuthController.resetPassword
 	);
 

@@ -1,4 +1,4 @@
-document.querySelector('button#booking').onclick = function(e) {
+if (document.querySelector('button#booking')) document.querySelector('button#booking').onclick = function(e) {
   e.preventDefault();
 
   const bookingDateWrapper = document.querySelector('#bookingDateWrapper');
@@ -53,7 +53,7 @@ if (document.querySelector('#bookingDate')) document.querySelector('#bookingDate
   }
 }
 
-document.querySelector('#favBtn').onclick = async function(e) {
+if (document.querySelector('#favBtn')) document.querySelector('#favBtn').onclick = async function(e) {
   removeFlash();
   flash('warning', 'Adding to favourites...', null);
 
@@ -86,7 +86,7 @@ document.querySelector('#favBtn').onclick = async function(e) {
       } 
     }
   } catch (error) {
-    console.log(error.response);
+    console.log(error);
     removeFlash();
     flash('error', 'There\'s a problem adding to your favourites');
   }

@@ -10,13 +10,21 @@ const BookingRouter = require('./routes/bookingRouter');
 // * Middlewares
 const AuthMiddleware = require('./middlewares/authMiddleware');
 const { globalErrorHandler } = require('./utils/error');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 // ! Temporary
 const BookingController = require('./controllers/bookingController');
 
 const app = express();
 const routePrefix = '/api/v1';
+
+// * Compressing response size
+app.use(compression({ filter: (req, res) => {
+      if (req.headers['x-no-compression']) return false;
+
+      return compression.filter(req, res);
+} }));
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));

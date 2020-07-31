@@ -9,7 +9,7 @@ document.querySelector('.form.form-user-data').addEventListener('submit', async 
   form.append('photo', document.getElementById('photo').files[0]);
 
   try {
-    const res = await axios.patch('http://127.0.0.1:3000/api/v1/users/updateMe', form, axiosConfig);
+    const res = await axios.patch('https://cosmic-desert-natours.herokuapp.com/api/v1/users/updateMe', form, axiosConfig);
 
     if (res.data.status === 'updated') {
       removeFlash();
@@ -38,7 +38,7 @@ document.querySelector('.form.form-user-settings').addEventListener('submit', as
   // alert(`${currPassword}, ${newPassword}, ${newPasswordConfirm}`);
 
   try {
-    const res = await axios.patch('http://127.0.0.1:3000/api/v1/users/updatePassword', { currPassword, newPassword, newPasswordConfirm }, axiosConfig);
+    const res = await axios.patch('https://cosmic-desert-natours.herokuapp.com/api/v1/users/updatePassword', { currPassword, newPassword, newPasswordConfirm }, axiosConfig);
 
     if (res.data.status === 'updated') {
       axiosConfig.headers["Authorization"] = `Bearer ${res.data.data.token}`;

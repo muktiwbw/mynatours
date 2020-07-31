@@ -18,7 +18,7 @@ exports.register = catchAsync(async (req, res, next) => {
     from: process.env.MAIL_ADDRESS,
     to: email,
     subject: 'Email Verification',
-    html: `To verify your email, please visit this link: <a href="http://127.0.0.1:3000/verifyEmail/${token}">Verify email.</a>`
+    html: `To verify your email, please visit this link: <a href="https://cosmic-desert-natours.herokuapp.com/verifyEmail/${token}">Verify email.</a>`
   });
 
   return res
@@ -109,7 +109,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     from: process.env.MAIL_ADDRESS,
     to: email,
     subject: 'Reset Password',
-    html: `To reset your password, please visit this link: <a href="http://127.0.0.1:3000/resetPassword/${token}">Reset password.</a>`
+    html: `To reset your password, please visit this link: <a href="https://cosmic-desert-natours.herokuapp.com/resetPassword/${token}">Reset password.</a>`
   });
 
   // * 5. Return

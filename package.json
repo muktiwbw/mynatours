@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tree": "tree -I node_modules",
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "db:seed": "node app/utils/seeder.js seed",
     "db:scoop": "node app/utils/seeder.js scoop"
   },

@@ -7,7 +7,7 @@ const deleteFav = async function(e) {
   const tourId = this.id;
 
   try {
-    const res = await axios.post(`/api/v1/tours/${tourId}/users/removeFromFavourites`, {}, axiosConfig);
+    const res = await axios.post(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${tourId}/users/removeFromFavourites`, {}, axiosConfig);
 
     if (res.data.status === 'success') {
       this.parentElement.parentElement.remove();

@@ -7,7 +7,7 @@ const deleteRev = async function(e) {
   const { review_id, tour_id } = this.dataset;
 
   try {
-    const res = await axios.delete(`/api/v1/tours/${tour_id}/reviews/${review_id}`, axiosConfig);
+    const res = await axios.delete(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${tour_id}/reviews/${review_id}`, axiosConfig);
 
     if (res) {
       this.parentElement.parentElement.remove();

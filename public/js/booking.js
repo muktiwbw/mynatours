@@ -32,7 +32,7 @@ if (document.querySelector('#bookingDate')) document.querySelector('#bookingDate
   const payload = { startDate: this.value };
 
   try {
-    const res = await axios.post(`/api/v1/tours/${this.getAttribute('tour-id')}/bookings/checkout`, payload, axiosConfig);
+    const res = await axios.post(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${this.getAttribute('tour-id')}/bookings/checkout`, payload, axiosConfig);
 
     if (res) {
       removeFlash();
@@ -66,7 +66,7 @@ if (document.querySelector('#favBtn')) document.querySelector('#favBtn').onclick
   const endpoint = isFavourite ? 'removeFromFavourites' : 'addToFavourites';
 
   try {
-    const res = await axios.post(`/api/v1/tours/${tour_id}/users/${endpoint}`, {}, axiosConfig);
+    const res = await axios.post(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${tour_id}/users/${endpoint}`, {}, axiosConfig);
 
     if (res.data.status === 'success') {
       isFavourite = !isFavourite;
@@ -170,9 +170,9 @@ const submitReview = async function(e) {
     let res;
     
     if (method === 'create') {
-      res = await axios.post(`/api/v1/tours/${this.dataset.tour_id}/reviews`, { review, rating }, axiosConfig);
+      res = await axios.post(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${this.dataset.tour_id}/reviews`, { review, rating }, axiosConfig);
     } else {
-      res = await axios.patch(`/api/v1/tours/${this.dataset.tour_id}/reviews/${this.dataset.review_id}`, { review, rating }, axiosConfig);
+      res = await axios.patch(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${this.dataset.tour_id}/reviews/${this.dataset.review_id}`, { review, rating }, axiosConfig);
     }
 
     if (res.data.status === 'success') {

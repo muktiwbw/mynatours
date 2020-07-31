@@ -38,8 +38,8 @@ const getStripeCheckoutSession = async (booking) => {
       quantity: 1
     }],
     mode: 'payment',
-    success_url: `http://127.0.0.1:3000/tours/${booking.tour._id}/bookings/create?user=${booking.user._id}&startDate=${booking.startDate}&price=${booking.tour.price}`,
-    cancel_url: `http://127.0.0.1:3000/tours/${booking.tour.slug}`,
+    success_url: `https://cosmic-desert-natours.herokuapp.com/tours/${booking.tour._id}/bookings/create?user=${booking.user._id}&startDate=${booking.startDate}&price=${booking.tour.price}`,
+    cancel_url: `https://cosmic-desert-natours.herokuapp.com/tours/${booking.tour.slug}`,
   });
 }
 

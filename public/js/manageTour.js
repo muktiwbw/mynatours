@@ -186,7 +186,7 @@ if (tourForm) tourForm.addEventListener('submit', async function(e) {
   Array.from(document.querySelectorAll('.guide-wrapper'), gd => form.append('guides[]', gd.getAttribute('value')));
 
   try {
-    const res = _id ? await axios.patch(`http://127.0.0.1:3000/api/v1/tours/${_id.value}`, form, axiosConfig) : await axios.post(`http://127.0.0.1:3000/api/v1/tours`, form, axiosConfig);
+    const res = _id ? await axios.patch(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${_id.value}`, form, axiosConfig) : await axios.post(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours`, form, axiosConfig);
 
     if (res) {
       removeFlash();
@@ -194,7 +194,7 @@ if (tourForm) tourForm.addEventListener('submit', async function(e) {
       flash('success', `Your data has successfully been ${_id ? 'updated': 'created'}`);
       
       setTimeout(() => {
-        window.location.href = '/manage/tours';
+        window.location.href = 'https://cosmic-desert-natours.herokuapp.com/manage/tours';
       }, 2000);
     }
   } catch (error) {
@@ -217,7 +217,7 @@ const deleteTour = async function(e) {
   
   const _id = this.id;
   try {
-    const res = await axios.delete(`http://127.0.0.1:3000/api/v1/tours/${_id}`, axiosConfig);
+    const res = await axios.delete(`https://cosmic-desert-natours.herokuapp.com/api/v1/tours/${_id}`, axiosConfig);
 
     if (res) {
       flash('success', 'Your data has successfully been deleted');

@@ -148,8 +148,11 @@ exports.getOneTour = catchAsync(async (req, res, next) => {
   if (res.locals.currentUser) {
     payload.isFavourite = (await User.findById(res.locals.currentUser._id)).favourites.map(fv => fv._id).includes(tour._id);
     payload.hasBooked = tour.bookings.length > 0;
+
+    // ! This will not work if there are many user-input reviews
+    // ! Obviously the user reviews will keep coming and it'll be under top 5 which 
+    // ! will not be queried since it'll be limited in population process (line 120)
     payload.hasReviewed = tour.reviews.map(rv => rv.user._id.toString()).includes(res.locals.currentUser._id.toString());
-    console.log(tour.reviews.map(rv => rv.user._id.toString()), res.locals.currentUser._id.toString());
   }
 
 

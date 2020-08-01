@@ -22,6 +22,7 @@ block contentMe
                 td(data-title="#") #{i+1}
                 td(data-title="Name") #{booking.tour.name}
                 td(data-title="Review") #{booking.tour.price}
+                //- Need moment for timezone adjustment
                 td(data-title="Rating") #{booking.createdAt.toLocaleString('id-ID')}
                 td(data-title="Control")
                   a(href=`/tours/${booking.tour.slug}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-edit')

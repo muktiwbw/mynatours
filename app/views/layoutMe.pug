@@ -21,7 +21,7 @@ block content
           if currentUser.role === 'user'
             +navItem('/me/favourites', 'heart', 'My favourites', (page === 'meFavs'))
             +navItem('/me/reviews', 'star', 'My reviews', (page === 'meRevs'))
-            +navItem('#', 'credit-card', 'Billing', false)
+            +navItem('/me/bookings', 'briefcase', 'Bookings', (page === 'meBookings'))
         if currentUser.role === 'admin'
           .admin-nav
             h5.admin-nav__heading Admin

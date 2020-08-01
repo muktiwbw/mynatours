@@ -1,0 +1,29 @@
+extends layoutMe
+
+block append header
+  link(rel='stylesheet', href='/css/table.css')
+
+block contentMe
+  main.main
+    .card-container.column-1
+      h2.heading-secondary My Bookings
+      .table-responsive-vertical.shadow-z-1
+        table#table.table.table-hover
+          thead
+            tr
+              th #
+              th Name
+              th Price
+              th Purchased at
+              th
+          tbody
+            each booking, i in bookings
+              tr
+                td(data-title="#") #{i+1}
+                td(data-title="Name") #{booking.tour.name}
+                td(data-title="Review") #{booking.tour.price}
+                td(data-title="Rating") #{booking.createdAt}
+                td(data-title="Control")
+                  a(href=`/tours/${booking.tour.slug}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-edit')
+        .right.ma-bt-sm.ma-rt-md: h3: i Material Design - Responsive Table by 
+          a(href="https://codepen.io/zavoloklom/pen/IGkDz", target="_blank") Sergey Kupletsky

@@ -24,6 +24,13 @@ router.route('/me/reviews')
             ViewController.getAllReviews
       );
 
+router.route('/me/billing')
+      .get(
+            AuthMiddleware.isLoggedIn,
+            AuthMiddleware.allowedToWeb('user'), 
+            ViewController.getAllBookings
+      );
+
 router.route('/manage/tours')
       .get(
             AuthMiddleware.isLoggedIn,

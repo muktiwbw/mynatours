@@ -34,15 +34,15 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json({ limit: '32kb' }));
 app.use(cookieParser());
 
-app.use(ViewRouter);
-
 // ! TEMPORARY ====================================
-app.route('/tours/:tour/bookings/create')
-      .get(BookingController.createOneBooking);
+// app.route('/tours/:tour/bookings/create')
+//       .get(BookingController.createOneBooking);
 
 app.route('/stripe/session-complete')
       .get(express.raw(), BookingController.stripeSessionComplete);
 // ! ==============================================
+
+app.use(ViewRouter);
 
 // * Routes that don't need authentication
 app.use(`${routePrefix}/auth`, AuthRouter);

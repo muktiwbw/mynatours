@@ -90,5 +90,5 @@ exports.createOneBooking = catchAsync(async (req, res, next) => {
 exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
   console.log(req.body.type);
 
-  return res.redirect('/');
+  return res.json({ received: true });
 });

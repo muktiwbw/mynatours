@@ -88,7 +88,11 @@ exports.createOneBooking = catchAsync(async (req, res, next) => {
 });
 
 exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
-  console.log(req.body.type);
+  if (req.body.type !== 'checkout.session.completed') {
+    return res.json({ received: false });
+  }
+
+  
 
   return res.json({ received: true });
 });

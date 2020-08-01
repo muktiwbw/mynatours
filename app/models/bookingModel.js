@@ -18,6 +18,10 @@ const schema = new db.Schema({
   price: {
     type: Number,
     required: [ true, 'A booking must have a price' ]
+  },
+  stripeCheckoutSession: {
+    type: String,
+    trim: true
   }
 });
 

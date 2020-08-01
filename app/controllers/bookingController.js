@@ -20,7 +20,7 @@ const getStripeCheckoutSession = async (booking) => {
   });
 
   return stripe.checkout.sessions.create({
-    client_reference_id: `${booking.user._id.toString()}|${booking.tour._id.toString()}|${booking.startDate.getTime()}`,
+    client_reference_id: `${booking.user._id.toString()}|${booking.tour._id.toString()}|${booking.startDate}`,
     customer: stripeCustomer.id,
     payment_method_types: ['card'],
     line_items: [{

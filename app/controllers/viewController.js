@@ -191,7 +191,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 exports.getAllBookings = catchAsync(async (req, res, next) => {
   const bookings = (await User.findById(res.locals.currentUser._id).populate({
     path: 'bookings', 
-    populate: { path: 'tour', select: '_id name slug' },
+    populate: { path: 'tour', select: '_id name slug price' },
     options: { 
       limit: 999
      }

@@ -18,6 +18,10 @@ const schema = new db.Schema({
   tour: {
     type: db.Schema.ObjectId,
     ref: 'Tour'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   }
 });
 

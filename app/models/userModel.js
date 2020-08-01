@@ -100,7 +100,10 @@ schema.virtual('bookings', {
 schema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
-  foreignField: 'user'
+  foreignField: 'user',
+  options: { 
+    sort: { createdAt: -1 }
+   }
 });
 
 module.exports = db.model('User', schema, 'users');

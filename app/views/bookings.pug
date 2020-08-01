@@ -22,7 +22,7 @@ block contentMe
                 td(data-title="#") #{i+1}
                 td(data-title="Name") #{booking.tour.name}
                 td(data-title="Review") #{booking.tour.price}
-                td(data-title="Rating") #{booking.createdAt}
+                td(data-title="Rating") #{booking.createdAt.toLocaleString()}
                 td(data-title="Control")
                   a(href=`/tours/${booking.tour.slug}`): svg.card__icon.ma-rt-sm: use(xlink:href='/img/icons.svg#icon-edit')
         .right.ma-bt-sm.ma-rt-md: h3: i Material Design - Responsive Table by 

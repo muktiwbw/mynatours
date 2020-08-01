@@ -15,7 +15,7 @@ const getStripeCheckoutSession = async (booking) => {
     active: true,
     description: booking.tour.summary,
     name: booking.tour.name,
-    images: `https://cosmic-desert-natours.herokuapp.com/${booking.tour.imageCover}`,
+    images: [`https://cosmic-desert-natours.herokuapp.com/${booking.tour.imageCover}`],
     type: 'service'
   });
 

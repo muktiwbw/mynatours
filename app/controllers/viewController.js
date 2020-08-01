@@ -147,9 +147,7 @@ exports.getOneTour = catchAsync(async (req, res, next) => {
     payload.hasBooked = tour.bookings.length > 0;
     payload.hasReviewed = tour.reviews.map(rv => rv.user._id.toString()).includes(res.locals.currentUser._id.toString());
   }
-
-  console.log(tour.reviews.map(rv => rv.user._id.toString()), res.locals.currentUser._id.toString());
-
+  
   res.locals.jwt = req.cookies.jwt;
                       
   return res.render('tour', payload);

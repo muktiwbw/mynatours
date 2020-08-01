@@ -15,17 +15,12 @@ const getStripeCheckoutSession = async (booking) => {
     active: true,
     description: booking.tour.summary,
     name: booking.tour.name,
-    images: [
-      'https://www.natours.dev/img/tours/tour-2-cover.jpg',
-      'https://www.natours.dev/img/tours/tour-2-1.jpg',
-      'https://www.natours.dev/img/tours/tour-2-2.jpg',
-      'https://www.natours.dev/img/tours/tour-2-3.jpg'
-    ],
+    images: `https://cosmic-desert-natours.herokuapp.com/${booking.tour.imageCover}`,
     type: 'service'
   });
 
   return stripe.checkout.sessions.create({
-    client_reference_id: booking.user._id.toString(),
+    client_reference_id: `${booking.user._id.toString()}|${booking.tour._id.toString()}`,
     customer: stripeCustomer.id,
     payment_method_types: ['card'],
     line_items: [{
@@ -92,7 +87,13 @@ exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
     return res.json({ received: false });
   }
 
-  
+  const [ user, tour ] = req.body.data.object.client_reference_id.split('|');
+  const price = req.body.data.object.amount_total / 100;
+  const stripeCheckoutSession = req.body.data.object.id;
+
+  // const bookingPayload = { user, tour, price, stripeCheckoutSession };
+
+  console.log(user, tour, price, stripeCheckoutSession);
 
   return res.json({ received: true });
 });

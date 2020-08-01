@@ -39,7 +39,7 @@ app.use(cookieParser());
 //       .get(BookingController.createOneBooking);
 
 app.route('/stripe/session-complete')
-      .get(express.raw(), BookingController.stripeSessionComplete);
+      .post(express.raw(), BookingController.stripeSessionComplete);
 // ! ==============================================
 
 app.use(ViewRouter);

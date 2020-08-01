@@ -121,7 +121,8 @@ exports.getOneTour = catchAsync(async (req, res, next) => {
                 path: 'reviews',
                 populate: { 
                   path: 'user', 
-                  select: '_id name photo'
+                  select: '_id name photo',
+                  options: { sort: { createdAt: -1 } }
                 }
               });
   

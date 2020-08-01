@@ -20,7 +20,7 @@ const getStripeCheckoutSession = async (booking) => {
   });
 
   return stripe.checkout.sessions.create({
-    client_reference_id: `${booking.user._id.toString()}|${booking.tour._id.toString()}`,
+    client_reference_id: `${booking.user._id.toString()}|${booking.tour._id.toString()}|${booking.startDate.getTime()}`,
     customer: stripeCustomer.id,
     payment_method_types: ['card'],
     line_items: [{
@@ -87,13 +87,13 @@ exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
     return res.json({ received: false });
   }
 
-  const [ user, tour ] = req.body.data.object.client_reference_id.split('|');
+  const [ user, tour, startDate ] = req.body.data.object.client_reference_id.split('|');
   const price = req.body.data.object.amount_total / 100;
   const stripeCheckoutSession = req.body.data.object.id;
 
   // const bookingPayload = { user, tour, price, stripeCheckoutSession };
 
-  console.log(user, tour, price, stripeCheckoutSession);
+  console.log(user, tour, price, startDate, stripeCheckoutSession);
 
   return res.json({ received: true });
 });

@@ -146,8 +146,10 @@ exports.getOneTour = catchAsync(async (req, res, next) => {
     payload.isFavourite = (await User.findById(res.locals.currentUser._id)).favourites.map(fv => fv._id).includes(tour._id);
     payload.hasBooked = tour.bookings.length > 0;
     payload.hasReviewed = tour.reviews.map(rv => rv.user._id.toString()).includes(res.locals.currentUser._id.toString());
+    console.log(tour.reviews.map(rv => rv.user._id.toString()), res.locals.currentUser._id.toString());
   }
-  
+
+
   res.locals.jwt = req.cookies.jwt;
                       
   return res.render('tour', payload);

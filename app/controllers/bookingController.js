@@ -91,9 +91,11 @@ exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
   const price = req.body.data.object.amount_total / 100;
   const stripeCheckoutSession = req.body.data.object.id;
 
-  // const bookingPayload = { user, tour, price, stripeCheckoutSession };
+  const bookingPayload = { user, tour, price, startDate, stripeCheckoutSession };
+  
+  const booking = await Booking.create(bookingPayload);
+  
+  const tourStatusUpdated = await updateTourStatus(booking);
 
-  console.log(user, tour, price, startDate, stripeCheckoutSession);
-
-  return res.json({ received: true });
+  return res.json({ received: tourStatusUpdated ? true : false });
 });

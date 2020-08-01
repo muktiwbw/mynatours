@@ -12,6 +12,7 @@ const AuthMiddleware = require('./middlewares/authMiddleware');
 const { globalErrorHandler } = require('./utils/error');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 // ! Temporary
 const BookingController = require('./controllers/bookingController');
@@ -19,6 +20,8 @@ const BookingController = require('./controllers/bookingController');
 
 const app = express();
 const routePrefix = '/api/v1';
+
+app.use(cors());
 
 // * Compressing response size
 app.use(compression({ filter: (req, res) => {

@@ -3,7 +3,6 @@ const Tour = require('./../models/tourModel');
 const User = require('./../models/userModel');
 const Booking = require('./../models/bookingModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
-const mongoose = require('mongoose');
 const { AppError } = require('../utils/error');
 
 const getStripeCheckoutSession = async (booking) => {
@@ -85,4 +84,10 @@ exports.createOneBooking = catchAsync(async (req, res, next) => {
   const tourStatusUpdated = await updateTourStatus(booking);
 
   return tourStatusUpdated ? res.redirect('/me') : AppError('There has been an error registering your booking', 500, true);
+});
+
+exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
+  console.log(req.body.type);
+
+  return res.redirect('/');
 });

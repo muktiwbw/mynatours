@@ -15,6 +15,7 @@ const compression = require('compression');
 
 // ! Temporary
 const BookingController = require('./controllers/bookingController');
+// ! ==============================================
 
 const app = express();
 const routePrefix = '/api/v1';
@@ -35,9 +36,13 @@ app.use(cookieParser());
 
 app.use(ViewRouter);
 
-// ! TEMPORARY
+// ! TEMPORARY ====================================
 app.route('/tours/:tour/bookings/create')
       .get(BookingController.createOneBooking);
+
+app.route('/stripe/session-complete')
+      .get(express.raw(), BookingController.stripeSessionComplete);
+// ! ==============================================
 
 // * Routes that don't need authentication
 app.use(`${routePrefix}/auth`, AuthRouter);

@@ -15,7 +15,7 @@ const getStripeCheckoutSession = async (booking) => {
     active: true,
     description: booking.tour.summary,
     name: booking.tour.name,
-    images: [`https://cosmic-desert-natours.herokuapp.com/${booking.tour.imageCover}`],
+    images: [`https://cosmic-desert-natours.herokuapp.com/img/tours/${booking.tour.imageCover}`],
     type: 'service'
   });
 
@@ -92,7 +92,7 @@ exports.stripeSessionComplete = catchAsync(async (req, res, next) => {
   const stripeCheckoutSession = req.body.data.object.id;
 
   const bookingPayload = { user, tour, price, startDate, stripeCheckoutSession };
-  
+
   const booking = await Booking.create(bookingPayload);
   
   const tourStatusUpdated = await updateTourStatus(booking);
